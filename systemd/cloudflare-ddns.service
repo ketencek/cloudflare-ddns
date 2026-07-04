@@ -1,0 +1,21 @@
+[Unit]
+Description=Cloudflare DDNS updater for sh.ketencek.com.au
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=salih
+Group=salih
+WorkingDirectory=/opt/cloudflare-ddns
+EnvironmentFile=/opt/cloudflare-ddns/.env
+ExecStart=/opt/cloudflare-ddns/venv/bin/python /opt/cloudflare-ddns/ddns.py
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/cloudflare-ddns
+
+[Install]
+WantedBy=multi-user.target

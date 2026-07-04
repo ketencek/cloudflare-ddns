@@ -1,0 +1,44 @@
+name: Deploy to Raspberry Pi
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.RASPBERRY_SSH_KEY }}" > ~/.ssh/raspberry_key
+          chmod 600 ~/.ssh/raspberry_key
+          ssh-keyscan -p "${{ secrets.RASPBERRY_PORT }}" "${{ secrets.RASPBERRY_HOST }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy over SSH
+        run: |
+          ssh \
+            -i ~/.ssh/raspberry_key \
+            -p "${{ secrets.RASPBERRY_PORT }}" \
+            "${{ secrets.RASPBERRY_USER }}@${{ secrets.RASPBERRY_HOST }}" \
+            'set -euo pipefail
+             cd /opt/cloudflare-ddns
+             git pull origin main
+             if [ ! -d venv ]; then
+               python3 -m venv venv
+             fi
+             ./venv/bin/python -m pip install --upgrade pip
+             ./venv/bin/pip install -r requirements.txt
+             sudo cp systemd/cloudflare-ddns.service /etc/systemd/system/cloudflare-ddns.service
+             sudo cp systemd/cloudflare-ddns.timer /etc/systemd/system/cloudflare-ddns.timer
+             sudo systemctl daemon-reload
+             sudo systemctl enable cloudflare-ddns.timer
+             sudo systemctl restart cloudflare-ddns.timer'
