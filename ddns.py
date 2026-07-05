@@ -127,6 +127,18 @@ def configure_logging() -> logging.Logger:
     return logger
 
 
+def log(
+    logger: logging.Logger,
+    level: int,
+    message: str,
+    exc_info: bool = False,
+    **fields: Any,
+) -> None:
+    """Write a structured log entry using Python's supported extra mechanism."""
+
+    logger.log(level, message, extra=fields, exc_info=exc_info)
+
+
 def load_config() -> Config:
     """Load required settings from .env and the process environment."""
 
@@ -315,10 +327,12 @@ def run(logger: logging.Logger) -> ExitCode:
         cloudflare_session = build_http_session(config.api_token)
 
         public_ip = get_public_ipv4(ip_session)
-        logger.info("Current public IPv4 detected", public_ip=public_ip)
+        log(logger, logging.INFO, "Current public IPv4 detected", public_ip=public_ip)
 
         record = find_a_record(cloudflare_session, config)
-        logger.info(
+        log(
+            logger,
+            logging.INFO,
             "Existing Cloudflare A record inspected",
             dns_record_name=record.name,
             dns_record_id=record.record_id,
@@ -326,7 +340,9 @@ def run(logger: logging.Logger) -> ExitCode:
         )
 
         if record.content == public_ip:
-            logger.info(
+            log(
+                logger,
+                logging.INFO,
                 "Cloudflare A record already matches public IPv4",
                 dns_record_name=record.name,
                 public_ip=public_ip,
@@ -336,7 +352,9 @@ def run(logger: logging.Logger) -> ExitCode:
             return ExitCode.SUCCESS
 
         update_a_record(cloudflare_session, config, record, public_ip)
-        logger.info(
+        log(
+            logger,
+            logging.INFO,
             "Cloudflare A record updated",
             dns_record_name=record.name,
             dns_record_id=record.record_id,
@@ -347,16 +365,16 @@ def run(logger: logging.Logger) -> ExitCode:
         return ExitCode.SUCCESS
 
     except ConfigError as exc:
-        logger.error("Configuration error", error=str(exc))
+        log(logger, logging.ERROR, "Configuration error", error=str(exc))
         return ExitCode.CONFIG_ERROR
     except NetworkError as exc:
-        logger.error("Network error", error=str(exc), exc_info=True)
+        log(logger, logging.ERROR, "Network error", error=str(exc), exc_info=True)
         return ExitCode.NETWORK_ERROR
     except CloudflareError as exc:
-        logger.error("Cloudflare error", error=str(exc), exc_info=True)
+        log(logger, logging.ERROR, "Cloudflare error", error=str(exc), exc_info=True)
         return ExitCode.CLOUDFLARE_ERROR
     except Exception as exc:  # pragma: no cover - defensive final boundary.
-        logger.error("Unexpected error", error=str(exc), exc_info=True)
+        log(logger, logging.ERROR, "Unexpected error", error=str(exc), exc_info=True)
         return ExitCode.UNEXPECTED_ERROR
 
 
