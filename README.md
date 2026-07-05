@@ -147,6 +147,15 @@ Add these GitHub repository secrets:
 - `RASPBERRY_USER`: SSH user, usually `salih`
 - `RASPBERRY_SSH_KEY`: private SSH key with access to the Raspberry Pi
 
+Optional email notification secrets:
+
+- `SMTP_HOST`: SMTP server hostname
+- `SMTP_PORT`: SMTP port, usually `587` for STARTTLS or `465` for SSL
+- `SMTP_USER`: SMTP username
+- `SMTP_PASSWORD`: SMTP password or app password
+- `MAIL_FROM`: sender email address
+- `MAIL_TO`: recipient email address
+
 The workflow runs on pushes to `main` and performs:
 
 1. Checkout repository.
@@ -158,6 +167,7 @@ The workflow runs on pushes to `main` and performs:
 7. Copy systemd service files.
 8. Reload systemd.
 9. Enable and restart the timer.
+10. Send a deployment email notification when SMTP secrets are configured.
 
 The Raspberry Pi user must be able to run the required `sudo systemctl` and `sudo cp` commands. Configure sudo policy for `salih` according to your security requirements.
 
