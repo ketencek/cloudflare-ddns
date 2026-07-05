@@ -175,6 +175,9 @@ chmod 600 /home/salih/projects/cloudflare-ddns/.env
 
 ## Troubleshooting
 
+Use the GitHub Actions workflow after small documentation changes to confirm
+that automated deployment to the Raspberry Pi is still healthy.
+
 Check whether the timer is active:
 
 ```bash
