@@ -14,7 +14,7 @@ ExecStart=/home/salih/projects/cloudflare-ddns/venv/bin/python /home/salih/proje
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
-ProtectHome=true
+ProtectHome=read-only
 ReadWritePaths=/home/salih/projects/cloudflare-ddns
 
 [Install]
