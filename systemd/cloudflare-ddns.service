@@ -7,15 +7,15 @@ After=network-online.target
 Type=oneshot
 User=salih
 Group=salih
-WorkingDirectory=/opt/cloudflare-ddns
-EnvironmentFile=/opt/cloudflare-ddns/.env
-ExecStart=/opt/cloudflare-ddns/venv/bin/python /opt/cloudflare-ddns/ddns.py
+WorkingDirectory=/home/salih/projects/cloudflare-ddns
+EnvironmentFile=/home/salih/projects/cloudflare-ddns/.env
+ExecStart=/home/salih/projects/cloudflare-ddns/venv/bin/python /home/salih/projects/cloudflare-ddns/ddns.py
 
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
-ReadWritePaths=/opt/cloudflare-ddns
+ReadWritePaths=/home/salih/projects/cloudflare-ddns
 
 [Install]
 WantedBy=multi-user.target

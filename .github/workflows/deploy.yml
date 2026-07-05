@@ -30,7 +30,7 @@ jobs:
             -p "${{ secrets.RASPBERRY_PORT }}" \
             "${{ secrets.RASPBERRY_USER }}@${{ secrets.RASPBERRY_HOST }}" \
             'set -euo pipefail
-             cd /opt/cloudflare-ddns
+             cd /home/salih/projects/cloudflare-ddns
              git pull origin main
              if [ ! -d venv ]; then
                python3 -m venv venv

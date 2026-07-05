@@ -45,7 +45,7 @@ The token is used only from `.env` on the Raspberry Pi. Do not commit it to Git.
 
 ## Environment Variables
 
-Create `/opt/cloudflare-ddns/.env` on the Raspberry Pi:
+Create `/home/salih/projects/cloudflare-ddns/.env` on the Raspberry Pi:
 
 ```bash
 CLOUDFLARE_API_TOKEN=your_cloudflare_api_token
@@ -63,10 +63,10 @@ Run these commands on the Raspberry Pi:
 sudo apt update
 sudo apt install -y git python3 python3-venv
 
-sudo mkdir -p /opt/cloudflare-ddns
-sudo chown salih:salih /opt/cloudflare-ddns
+sudo mkdir -p /home/salih/projects/cloudflare-ddns
+sudo chown salih:salih /home/salih/projects/cloudflare-ddns
 
-cd /opt/cloudflare-ddns
+cd /home/salih/projects/cloudflare-ddns
 git clone <your_repository_url> .
 
 python3 -m venv venv
@@ -85,7 +85,7 @@ Replace `<your_repository_url>` with the GitHub repository URL for this project.
 Run one update cycle:
 
 ```bash
-cd /opt/cloudflare-ddns
+cd /home/salih/projects/cloudflare-ddns
 ./venv/bin/python ddns.py
 echo $?
 ```
@@ -109,7 +109,7 @@ Logs are JSON lines. Example:
 Install and start the timer:
 
 ```bash
-cd /opt/cloudflare-ddns
+cd /home/salih/projects/cloudflare-ddns
 sudo cp systemd/cloudflare-ddns.service /etc/systemd/system/cloudflare-ddns.service
 sudo cp systemd/cloudflare-ddns.timer /etc/systemd/system/cloudflare-ddns.timer
 sudo systemctl daemon-reload
@@ -151,7 +151,7 @@ The workflow runs on pushes to `main` and performs:
 
 1. Checkout repository.
 2. SSH into the Raspberry Pi.
-3. `cd /opt/cloudflare-ddns`.
+3. `cd /home/salih/projects/cloudflare-ddns`.
 4. `git pull origin main`.
 5. Create `venv` if missing.
 6. Install Python requirements.
@@ -167,10 +167,10 @@ The Raspberry Pi user must be able to run the required `sudo systemctl` and `sud
 - Cloudflare API tokens must never be committed.
 - GitHub deployment uses GitHub Secrets only.
 - Use a Cloudflare API token limited to DNS edit access for the relevant zone.
-- Keep `/opt/cloudflare-ddns/.env` readable only by the service owner:
+- Keep `/home/salih/projects/cloudflare-ddns/.env` readable only by the service owner:
 
 ```bash
-chmod 600 /opt/cloudflare-ddns/.env
+chmod 600 /home/salih/projects/cloudflare-ddns/.env
 ```
 
 ## Troubleshooting
@@ -202,7 +202,7 @@ curl -4 https://api.ipify.org
 Validate Cloudflare credentials by running:
 
 ```bash
-cd /opt/cloudflare-ddns
+cd /home/salih/projects/cloudflare-ddns
 ./venv/bin/python ddns.py
 ```
 
