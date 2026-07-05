@@ -1,9 +1,9 @@
 [Unit]
-Description=Run Cloudflare DDNS updater every 5 minutes
+Description=Run Cloudflare DDNS updater hourly
 
 [Timer]
 OnBootSec=1min
-OnUnitActiveSec=5min
+OnUnitActiveSec=1h
 AccuracySec=30s
 Persistent=true
 Unit=cloudflare-ddns.service

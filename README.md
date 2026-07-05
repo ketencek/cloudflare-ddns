@@ -136,7 +136,7 @@ journalctl -u cloudflare-ddns.service -n 100 --no-pager
 journalctl -u cloudflare-ddns.service -f
 ```
 
-The timer runs every 5 minutes.
+The timer runs once per hour.
 
 ## GitHub Actions Setup
 
